@@ -42,6 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataSources\Generators.cs" />
+    <Compile Include="DataSources\Prices\IPriceDataSource.cs" />
+    <Compile Include="Data\MarketValue.cs" />
+    <Compile Include="Data\Position.cs" />
+    <Compile Include="Data\Price.cs" />
+    <Compile Include="Data\PricePositionJunction.cs" />
+    <Compile Include="DataSources\Prices\WebService1.cs" />
+    <Compile Include="DataSources\Prices\WebService2.cs" />
+    <Compile Include="DataSources\Prices\WebService3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
