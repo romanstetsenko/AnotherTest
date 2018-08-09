@@ -10,9 +10,9 @@ namespace ConsoleApp1.Services
 {
     public class PriceService
     {
-        public static Task<Result> GetPricesAsync()
+        public static Task<Result<Price[]>> GetPricesAsync()
         {
-            return Task.Run<Result>(() =>
+            return Task.Run<Result<Price[]>>(() =>
             {
                 try
                 {
@@ -21,7 +21,7 @@ namespace ConsoleApp1.Services
                 }
                 catch (Exception e)
                 {
-                    return new Failure(e.Message);
+                    return new Failure<Price[]>(e.Message);
                 }
             });
         }

@@ -13,9 +13,9 @@ namespace ConsoleApp1.Services
             return Generators.GeneratePositions();
         }
 
-        public static Task<Result> GetPositionsAsync()
+        public static Task<Result<Position[]>> GetPositionsAsync()
         {
-            return Task.Run<Result>(() =>
+            return Task.Run<Result<Position[]>>(() =>
             {
                 try
                 {
@@ -24,7 +24,7 @@ namespace ConsoleApp1.Services
                 }
                 catch (Exception e)
                 {
-                    return new Failure(e.Message);
+                    return new Failure<Position[]>(e.Message);
                 }
             });
         }

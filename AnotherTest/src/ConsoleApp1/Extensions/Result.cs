@@ -1,10 +1,10 @@
 ﻿namespace ConsoleApp1.Extensions
 {
-    public class Result
+    public class Result<TValue>
     {
     }
 
-    public class Failure : Result
+    public class Failure<TValue> : Result<TValue>
     {
         public Failure(string reason)
         {
@@ -14,7 +14,7 @@
         public string Reason { get; }
     }
 
-    public class Success<TValue> : Result
+    public class Success<TValue> : Result<TValue>
     {
         public Success(TValue value)
         {

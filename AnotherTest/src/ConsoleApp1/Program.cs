@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1.Data;
 using ConsoleApp1.Extensions;
@@ -14,21 +15,37 @@ namespace ConsoleApp1
             var positionsAsync = PositionService.GetPositionsAsync();
             var (pricesResult, positionsResult) = TaskEx.WhenAll(pricesAsync, positionsAsync).Result;
 
-            if (pricesResult is Success<Price[]> pricesSuccess && positionsResult is Success<Position[]> positionsSuccess)
+            if (pricesResult is Success<Price[]> pricesSuccess &&
+                positionsResult is Success<Position[]> positionsSuccess)
             {
-                var marketValues =
+                var marketValuesResult =
                     MarketValueService.CreateMarketValues(pricesSuccess.Value, positionsSuccess.Value);
-                marketValues.Select(MarketValue.ToFormatString).ForEach(Console.WriteLine);
+
+                if (marketValuesResult is Success<IEnumerable<MarketValue>> marketValuesSuccess)
+                {
+                    var marketValues = marketValuesSuccess.Value;
+                    marketValues.Select(MarketValue.ToFormatString).ForEach(Console.WriteLine);
+                }
+                else
+                {
+                    WriteLineIfFailure(marketValuesResult);
+                }
             }
             else
             {
-                if(pricesResult is Failure pricesFailure)
-                    Console.WriteLine(pricesFailure.Reason);
-                if (positionsResult is Failure positionsFailure)
-                    Console.WriteLine(positionsFailure.Reason);
+                WriteLineIfFailure(pricesResult);
+                WriteLineIfFailure(positionsResult);
             }
 
             Console.ReadLine();
+        }
+
+        private static void WriteLineIfFailure<TValue>(Result<TValue> result)
+        {
+            if (result is Failure<TValue> failure)
+            {
+                Console.WriteLine(failure.Reason);
+            }
         }
     }
 }

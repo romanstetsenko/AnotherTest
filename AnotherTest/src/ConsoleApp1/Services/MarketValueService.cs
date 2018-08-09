@@ -2,19 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 using ConsoleApp1.Data;
+using ConsoleApp1.Extensions;
 
 namespace ConsoleApp1.Services
 {
     public class MarketValueService
     {
-        public static IEnumerable<MarketValue> CreateMarketValues(IEnumerable<Price> prices,
+        public static Result<IEnumerable<MarketValue>> CreateMarketValues(IEnumerable<Price> prices,
             IEnumerable<Position> positions)
         {
-            return positions
-                .Join(prices,
-                    position => new PricePositionJunction(position),
-                    price => new PricePositionJunction(price),
-                    (position, price) => new MarketValue(position, price));
+            try
+            {
+                var marketValues = positions
+                    .Join(prices,
+                        position => new PricePositionJunction(position),
+                        price => new PricePositionJunction(price),
+                        (position, price) => new MarketValue(position, price));
+                return new Success<IEnumerable<MarketValue>>(marketValues);
+            }
+            catch (Exception e)
+            {
+                return new Failure<IEnumerable<MarketValue>>(e.Message);
+            }
         }
 
         internal struct PricePositionJunction
