@@ -15,10 +15,10 @@ namespace ConsoleApp1.Data
         public Position Position { get; }
         public Price Price { get; }
 
-        public override string ToString()
+        public static string ToFormatString(MarketValue marketValue)
         {
             return
-                $"Market value of position {Position.PositionId} is {Value} for {Position.ProductKey} on date {Price.Date.ToShortDateString()}";
+                $"Market value of position {marketValue.Position.PositionId} is {marketValue.Value} for {marketValue.Position.ProductKey} on date {marketValue.Price.Date.ToShortDateString()}";
         }
     }
 }

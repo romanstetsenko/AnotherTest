@@ -50,16 +50,17 @@
     <Compile Include="Data\MarketValue.cs" />
     <Compile Include="Data\Position.cs" />
     <Compile Include="Data\Price.cs" />
-    <Compile Include="Data\PricePositionJunction.cs" />
     <Compile Include="DataSources\Prices\WebService1.cs" />
     <Compile Include="DataSources\Prices\WebService2.cs" />
     <Compile Include="DataSources\Prices\WebService3.cs" />
+    <Compile Include="Extensions\EnumerableEx.cs" />
+    <Compile Include="Extensions\Result.cs" />
     <Compile Include="Services\MarketValueService.cs" />
     <Compile Include="Services\PositionService.cs" />
     <Compile Include="Services\PriceService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TaskEx.cs" />
+    <Compile Include="Extensions\TaskEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

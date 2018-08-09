@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace ConsoleApp1.Extensions
 {
     public static class TaskEx
     {
