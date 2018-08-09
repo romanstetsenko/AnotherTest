@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using ConsoleApp1.Data;
 using ConsoleApp1.DataSources;
 using ConsoleApp1.DataSources.Prices;
@@ -11,8 +12,10 @@ namespace ConsoleApp1
     {
         private static void Main(string[] _)
         {
-            Price[] prices = GetPrices(); // can be more than 100000 records
-            Position[] positions = GetPositions(); // can be more than 1000 records
+            var pricesAsync = Task.Run(() => GetPrices());
+            var positionsAsync = Task.Run(() => GetPositions());
+            var (prices, positions) = TaskEx.WhenAll(pricesAsync, positionsAsync).Result;
+
             IEnumerable<MarketValue> marketValues = CreateMarketValues(positions, prices);
             marketValues.ForEach(Console.WriteLine);
             Console.ReadLine();

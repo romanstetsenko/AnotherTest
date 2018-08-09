@@ -22,6 +22,9 @@ namespace ConsoleApp1.DataSources
 
         public static Position[] GeneratePositions()
         {
+            var r = new Random();
+            Thread.Sleep(r.Next(1, 5) * 1000);
+
             var position1 = new Position
             {
                 ProductKey = "AAA",
