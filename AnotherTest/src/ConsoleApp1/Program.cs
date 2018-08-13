@@ -9,42 +9,47 @@ namespace ConsoleApp1
 {
     internal static class Program
     {
-        private static void Main()
+        private static void Main(string[] args)
         {
-            var pricesAsync = PriceService.GetPricesAsync();
-            var positionsAsync = PositionService.GetPositionsAsync();
-            var (pricesResult, positionsResult) = TaskEx.WhenAll(pricesAsync, positionsAsync).Result;
-
-            if (pricesResult is Success<Price[]> pricesSuccess &&
-                positionsResult is Success<Position[]> positionsSuccess)
+            // define your inputs
+            Price[] GetInputPrices()
             {
-                var marketValuesResult =
-                    MarketValueService.CreateMarketValues(pricesSuccess.Value, positionsSuccess.Value);
+                return PriceMockService.GetPrices();
+            }
 
-                if (marketValuesResult is Success<IEnumerable<MarketValue>> marketValuesSuccess)
-                {
-                    var marketValues = marketValuesSuccess.Value;
-                    marketValues.Select(MarketValue.ToFormatString).ForEach(Console.WriteLine);
-                }
-                else
-                {
-                    WriteLineIfFailure(marketValuesResult);
-                }
-            }
-            else
+            Position[] GetInputPositions()
             {
-                WriteLineIfFailure(pricesResult);
-                WriteLineIfFailure(positionsResult);
+                return PositionMockService.GetPositions();
             }
+
+            // set output result creator
+            var marketValueFactory = new MarketValueFactory();
+
+            // specify a joining algorithm
+            var marketValueCollater = new MarketValueCollater(marketValueFactory);
+
+            // choose approach to execute the logic
+            var appFlow = new ParallelAppFlow(marketValueCollater, GetInputPrices, GetInputPositions);
+            //var appFlow = new SequentalAppFlow(marketValueCollater, GetInputPrices, GetInputPositions);
+
+            var appResult = appFlow.Run();
+
+            PrintResult(appResult);
 
             Console.ReadLine();
         }
 
-        private static void WriteLineIfFailure<TValue>(Result<TValue> result)
+        private static void PrintResult(Result<IEnumerable<MarketValue>> appResult)
         {
-            if (result is Failure<TValue> failure)
+            switch (appResult)
             {
-                Console.WriteLine(failure.Reason);
+                case Success<IEnumerable<MarketValue>> success:
+                    success.Value.Select(MarketValue.ToFormatString).ForEach(Console.WriteLine);
+                    break;
+
+                case Failure<IEnumerable<MarketValue>> failure:
+                    Console.WriteLine(failure.Reason);
+                    break;
             }
         }
     }

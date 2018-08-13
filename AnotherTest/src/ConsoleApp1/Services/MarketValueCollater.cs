@@ -6,9 +6,16 @@ using ConsoleApp1.Extensions;
 
 namespace ConsoleApp1.Services
 {
-    public class MarketValueService
+    public class MarketValueCollater
     {
-        public static Result<IEnumerable<MarketValue>> CreateMarketValues(IEnumerable<Price> prices,
+        private readonly MarketValueFactory _marketValueFactory;
+
+        public MarketValueCollater(MarketValueFactory marketValueFactory)
+        {
+            _marketValueFactory = marketValueFactory;
+        }
+
+        public Result<IEnumerable<MarketValue>> Collate(IEnumerable<Price> prices,
             IEnumerable<Position> positions)
         {
             try
@@ -17,7 +24,7 @@ namespace ConsoleApp1.Services
                     .Join(prices,
                         position => (position.ProductKey, position.Date),
                         price => (price.ProductKey, price.Date),
-                        (position, price) => new MarketValue(position, price));
+                        (position, price) => _marketValueFactory.Create(position, price));
                 return new Success<IEnumerable<MarketValue>>(marketValues);
             }
             catch (Exception e)

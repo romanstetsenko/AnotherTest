@@ -1,31 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using ConsoleApp1.Data;
 using ConsoleApp1.DataSources.Prices;
-using ConsoleApp1.Extensions;
 
 namespace ConsoleApp1.Services
 {
-    public class PriceService
+    public class PriceMockService
     {
-        public static Task<Result<Price[]>> GetPricesAsync()
-        {
-            return Task.Run<Result<Price[]>>(() =>
-            {
-                try
-                {
-                    var prices = GetPrices();
-                    return new Success<Price[]>(prices);
-                }
-                catch (Exception e)
-                {
-                    return new Failure<Price[]>(e.Message);
-                }
-            });
-        }
-
         public static Price[] GetPrices(IEnumerable<IPriceDataSource> dataSources)
         {
             return dataSources
